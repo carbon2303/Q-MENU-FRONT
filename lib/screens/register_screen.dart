@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 
-import 'admin_screen.dart';
 import 'customer_screen.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController nameController = TextEditingController();
 
   final TextEditingController emailController = TextEditingController();
@@ -19,53 +18,37 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool obscurePassword = true;
 
-  bool isLogin = true;
-
-  void login() {
+  void register() {
+    String name = nameController.text;
     String email = emailController.text;
     String password = passwordController.text;
 
-    // ADMIN
-    if (email == "admin@gmail.com" && password == "1234") {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const AdminScreen(),
-        ),
-      );
-    }
-
-    // CLIENTE
-    else if (email == "cliente@gmail.com" && password == "1234") {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const CustomerScreen(),
-        ),
-      );
-    } else {
+    if (name.isEmpty || email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-            "Correo o contraseña incorrectos",
+            "Completa todos los campos",
           ),
         ),
       );
-    }
-  }
 
-  void register() {
+      return;
+    }
+
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
+      SnackBar(
         content: Text(
-          "Cuenta creada correctamente",
+          "Bienvenido $name 🎉",
         ),
       ),
     );
 
-    setState(() {
-      isLogin = true;
-    });
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const CustomerScreen(),
+      ),
+    );
   }
 
   @override
@@ -96,7 +79,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   width: 120,
                   height: 120,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
+                    borderRadius: BorderRadius.circular(
+                      25,
+                    ),
                     image: const DecorationImage(
                       image: AssetImage(
                         "assets/logo.png",
@@ -106,56 +91,64 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 20),
+                const SizedBox(
+                  height: 20,
+                ),
 
-                Text(
-                  isLogin ? "Iniciar Sesión" : "Registrarse",
-                  style: const TextStyle(
+                const Text(
+                  "Crear Cuenta",
+                  style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
 
-                const SizedBox(height: 10),
+                const SizedBox(
+                  height: 10,
+                ),
 
                 Text(
-                  isLogin ? "Bienvenido de nuevo" : "Crea una cuenta",
+                  "Regístrate para continuar",
                   style: TextStyle(
                     color: Colors.grey.shade600,
                     fontSize: 16,
                   ),
                 ),
 
-                const SizedBox(height: 30),
+                const SizedBox(
+                  height: 30,
+                ),
 
                 // NOMBRE
-                if (!isLogin)
-                  Column(
-                    children: [
-                      TextField(
-                        controller: nameController,
-                        decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.person),
-                          hintText: "Nombre completo",
-                          filled: true,
-                          fillColor: Colors.grey.shade100,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(
-                              18,
-                            ),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
+                TextField(
+                  controller: nameController,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(
+                      Icons.person,
+                    ),
+                    hintText: "Nombre",
+                    filled: true,
+                    fillColor: Colors.grey.shade100,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(
+                        18,
                       ),
-                      const SizedBox(height: 20),
-                    ],
+                      borderSide: BorderSide.none,
+                    ),
                   ),
+                ),
+
+                const SizedBox(
+                  height: 20,
+                ),
 
                 // EMAIL
                 TextField(
                   controller: emailController,
                   decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.email),
+                    prefixIcon: const Icon(
+                      Icons.email,
+                    ),
                     hintText: "Correo electrónico",
                     filled: true,
                     fillColor: Colors.grey.shade100,
@@ -168,14 +161,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 20),
+                const SizedBox(
+                  height: 20,
+                ),
 
                 // PASSWORD
                 TextField(
                   controller: passwordController,
                   obscureText: obscurePassword,
                   decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.lock),
+                    prefixIcon: const Icon(
+                      Icons.lock,
+                    ),
                     hintText: "Contraseña",
                     filled: true,
                     fillColor: Colors.grey.shade100,
@@ -200,7 +197,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 30),
+                const SizedBox(
+                  height: 30,
+                ),
 
                 // BOTON
                 SizedBox(
@@ -217,10 +216,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
-                    onPressed: isLogin ? login : register,
-                    child: Text(
-                      isLogin ? "Entrar" : "Registrarse",
-                      style: const TextStyle(
+                    onPressed: register,
+                    child: const Text(
+                      "Registrarse",
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -229,50 +228,24 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 20),
-
-                // CAMBIAR LOGIN / REGISTER
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      isLogin ? "¿No tienes cuenta?" : "¿Ya tienes cuenta?",
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          isLogin = !isLogin;
-                        });
-                      },
-                      child: Text(
-                        isLogin ? "Registrarse" : "Iniciar Sesión",
-                        style: const TextStyle(
-                          color: Colors.orange,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
+                const SizedBox(
+                  height: 20,
                 ),
 
-                const SizedBox(height: 20),
-
-                // DATOS
-                if (isLogin) ...[
-                  Text(
-                    "@q-menu",
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(
+                      context,
+                    );
+                  },
+                  child: const Text(
+                    "¿Ya tienes cuenta? Inicia sesión",
                     style: TextStyle(
-                      color: Colors.grey.shade700,
+                      color: Colors.orange,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 5),
-                  Text(
-                    "...",
-                    style: TextStyle(
-                      color: Colors.grey.shade700,
-                    ),
-                  ),
-                ],
+                ),
               ],
             ),
           ),

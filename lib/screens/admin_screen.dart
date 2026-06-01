@@ -9,6 +9,8 @@ class AdminScreen extends StatefulWidget {
 }
 
 class _AdminScreenState extends State<AdminScreen> {
+  int paginaActual = 0;
+
   final List<Map<String, dynamic>> platillos = [
     {
       "nombre": "Tacos de Barbacoa",
@@ -24,84 +26,43 @@ class _AdminScreenState extends State<AdminScreen> {
 
   void agregarPlatillo() {
     TextEditingController nombreController = TextEditingController();
-
     TextEditingController precioController = TextEditingController();
-
     TextEditingController imagenController = TextEditingController();
 
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          title: const Text(
-            "Agregar Platillo",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          content: SizedBox(
-            width: 350,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: nombreController,
-                  decoration: InputDecoration(
-                    hintText: "Nombre",
-                    filled: true,
-                    fillColor: Colors.grey.shade100,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
+          title: const Text("Agregar Platillo"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: nombreController,
+                decoration: const InputDecoration(
+                  labelText: "Nombre",
                 ),
-                const SizedBox(height: 15),
-                TextField(
-                  controller: precioController,
-                  decoration: InputDecoration(
-                    hintText: "Precio",
-                    filled: true,
-                    fillColor: Colors.grey.shade100,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
+              ),
+              TextField(
+                controller: precioController,
+                decoration: const InputDecoration(
+                  labelText: "Precio",
                 ),
-                const SizedBox(height: 15),
-                TextField(
-                  controller: imagenController,
-                  decoration: InputDecoration(
-                    hintText: "URL Imagen",
-                    filled: true,
-                    fillColor: Colors.grey.shade100,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
+              ),
+              TextField(
+                controller: imagenController,
+                decoration: const InputDecoration(
+                  labelText: "URL Imagen",
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           actions: [
             TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
+              onPressed: () => Navigator.pop(context),
               child: const Text("Cancelar"),
             ),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-              ),
               onPressed: () {
                 setState(() {
                   platillos.add({
@@ -113,12 +74,7 @@ class _AdminScreenState extends State<AdminScreen> {
 
                 Navigator.pop(context);
               },
-              child: const Text(
-                "Guardar",
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
+              child: const Text("Guardar"),
             ),
           ],
         );
@@ -143,61 +99,281 @@ class _AdminScreenState extends State<AdminScreen> {
 
   Widget menuItem(
     IconData icon,
-    String text,
+    String titulo,
+    int index,
   ) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.symmetric(
-        horizontal: 18,
-        vertical: 16,
-      ),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            icon,
-            color: Colors.orange,
-          ),
-          const SizedBox(width: 15),
-          Text(
-            text,
-            style: const TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 16,
+    bool seleccionado = paginaActual == index;
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          paginaActual = index;
+        });
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          color: seleccionado ? Colors.orange : Colors.white,
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              color: seleccionado ? Colors.white : Colors.orange,
             ),
-          ),
-        ],
+            const SizedBox(width: 12),
+            Text(
+              titulo,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: seleccionado ? Colors.white : Colors.black,
+              ),
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  Widget dashboard() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "Dashboard",
+          style: TextStyle(
+            fontSize: 32,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 25),
+        Row(
+          children: [
+            tarjetaInfo(
+              "Platillos",
+              platillos.length.toString(),
+              Icons.restaurant,
+            ),
+            const SizedBox(width: 20),
+            tarjetaInfo(
+              "Pedidos",
+              "15",
+              Icons.shopping_cart,
+            ),
+            const SizedBox(width: 20),
+            tarjetaInfo(
+              "Clientes",
+              "28",
+              Icons.people,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget tarjetaInfo(
+    String titulo,
+    String valor,
+    IconData icon,
+  ) {
+    return Expanded(
+      child: Container(
+        height: 150,
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              size: 40,
+              color: Colors.orange,
+            ),
+            const SizedBox(height: 10),
+            Text(
+              valor,
+              style: const TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(titulo),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget pantallaPlatillos() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              "Gestión de Platillos",
+              style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            ElevatedButton.icon(
+              onPressed: agregarPlatillo,
+              icon: const Icon(Icons.add),
+              label: const Text("Agregar"),
+            ),
+          ],
+        ),
+        const SizedBox(height: 20),
+        Expanded(
+          child: GridView.builder(
+            itemCount: platillos.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              crossAxisSpacing: 20,
+              mainAxisSpacing: 20,
+              childAspectRatio: .8,
+            ),
+            itemBuilder: (context, index) {
+              final platillo = platillos[index];
+
+              return Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(20),
+                        ),
+                        child: Image.network(
+                          platillo["imagen"],
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Column(
+                        children: [
+                          Text(
+                            platillo["nombre"],
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            platillo["precio"],
+                            style: const TextStyle(
+                              color: Colors.orange,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                            ),
+                            onPressed: () => eliminarPlatillo(index),
+                            icon: const Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                            ),
+                            label: const Text(
+                              "Eliminar",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget contenidoPrincipal() {
+    switch (paginaActual) {
+      case 0:
+        return dashboard();
+
+      case 1:
+        return pantallaPlatillos();
+
+      case 2:
+        return const Center(
+          child: Text(
+            "Pedidos",
+            style: TextStyle(fontSize: 30),
+          ),
+        );
+
+      case 3:
+        return const Center(
+          child: Text(
+            "Clientes",
+            style: TextStyle(fontSize: 30),
+          ),
+        );
+
+      case 4:
+        return const Center(
+          child: Text(
+            "Ventas",
+            style: TextStyle(fontSize: 30),
+          ),
+        );
+
+      case 5:
+        return const Center(
+          child: Text(
+            "Configuración",
+            style: TextStyle(fontSize: 30),
+          ),
+        );
+
+      default:
+        return dashboard();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF4F4F4),
+      backgroundColor: const Color(0xfff5f5f5),
       body: Row(
         children: [
-          // SIDEBAR
           Container(
             width: 260,
             padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Colors.orange.shade100,
-            ),
+            color: Colors.orange.shade100,
             child: Column(
               children: [
                 const SizedBox(height: 30),
-
-                // LOGO
                 Container(
-                  width: 110,
-                  height: 110,
+                  width: 120,
+                  height: 120,
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(25),
+                    borderRadius: BorderRadius.circular(20),
                     image: const DecorationImage(
                       image: AssetImage("assets/logo.png"),
                       fit: BoxFit.contain,
@@ -205,7 +381,6 @@ class _AdminScreenState extends State<AdminScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-
                 const Text(
                   "ADMIN PANEL",
                   style: TextStyle(
@@ -213,195 +388,47 @@ class _AdminScreenState extends State<AdminScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-
-                const SizedBox(height: 35),
-
-                menuItem(Icons.dashboard, "Dashboard"),
-                menuItem(Icons.restaurant_menu, "Platillos"),
-                menuItem(Icons.shopping_cart, "Pedidos"),
-                menuItem(Icons.people, "Clientes"),
-                menuItem(Icons.bar_chart, "Ventas"),
-                menuItem(Icons.settings, "Configuración"),
-
+                const SizedBox(height: 30),
+                menuItem(Icons.dashboard, "Dashboard", 0),
+                menuItem(Icons.restaurant_menu, "Platillos", 1),
+                menuItem(Icons.shopping_cart, "Pedidos", 2),
+                menuItem(Icons.people, "Clientes", 3),
+                menuItem(Icons.bar_chart, "Ventas", 4),
+                menuItem(Icons.settings, "Configuración", 5),
+                const Spacer(),
                 GestureDetector(
                   onTap: cerrarSesion,
-                  child: menuItem(
-                    Icons.logout,
-                    "Cerrar Sesión",
+                  child: Container(
+                    padding: const EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: const Row(
+                      children: [
+                        Icon(
+                          Icons.logout,
+                          color: Colors.white,
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          "Cerrar Sesión",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-
-          // CONTENIDO
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(30),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // HEADER
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "Gestión de Platillos",
-                        style: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.orange,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 25,
-                            vertical: 18,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                              18,
-                            ),
-                          ),
-                        ),
-                        onPressed: agregarPlatillo,
-                        icon: const Icon(
-                          Icons.add,
-                          color: Colors.white,
-                        ),
-                        label: const Text(
-                          "Agregar",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 30),
-
-                  // TARJETAS
-                  Expanded(
-                    child: GridView.builder(
-                      itemCount: platillos.length,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        crossAxisSpacing: 25,
-                        mainAxisSpacing: 25,
-                        childAspectRatio: 0.78,
-                      ),
-                      itemBuilder: (context, index) {
-                        final platillo = platillos[index];
-
-                        return Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(
-                              25,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 10,
-                                offset: const Offset(
-                                  0,
-                                  4,
-                                ),
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            children: [
-                              // IMAGEN
-                              Expanded(
-                                child: ClipRRect(
-                                  borderRadius: const BorderRadius.vertical(
-                                    top: Radius.circular(
-                                      25,
-                                    ),
-                                  ),
-                                  child: Image.network(
-                                    platillo["imagen"],
-                                    width: double.infinity,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-
-                              Padding(
-                                padding: const EdgeInsets.all(
-                                  18,
-                                ),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      platillo["nombre"],
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(
-                                      platillo["precio"],
-                                      style: const TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.orange,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 18,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        ElevatedButton.icon(
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.red,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                14,
-                                              ),
-                                            ),
-                                          ),
-                                          onPressed: () {
-                                            eliminarPlatillo(
-                                              index,
-                                            );
-                                          },
-                                          icon: const Icon(
-                                            Icons.delete,
-                                            color: Colors.white,
-                                          ),
-                                          label: const Text(
-                                            "Eliminar",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
+              child: contenidoPrincipal(),
             ),
           ),
         ],

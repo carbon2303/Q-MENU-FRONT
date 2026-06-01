@@ -33,7 +33,7 @@ class _AdminScreenState extends State<AdminScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text("Agregar Platillo"),
+          title: const Text("Agregar Platillos"),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

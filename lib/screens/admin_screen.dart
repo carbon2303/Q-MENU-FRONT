@@ -310,6 +310,131 @@ class _AdminScreenState extends State<AdminScreen> {
     );
   }
 
+  Widget pantallaPedidos() {
+    // Datos simulados para la vista de administración
+    final List<Map<String, dynamic>> pedidos = [
+      {
+        "id": "#1023",
+        "mesa": "Mesa 4",
+        "total": "\$350",
+        "estado": "En preparación",
+        "colorEstado": Colors.orange,
+        "items": ["2 Hamburguesas", "1 Papas", "2 Refrescos"]
+      },
+      {
+        "id": "#1024",
+        "mesa": "Mesa 8",
+        "total": "\$120",
+        "estado": "Listo",
+        "colorEstado": Colors.green,
+        "items": ["3 Tacos", "1 Coca Cola"]
+      },
+    ];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "Panel de Pedidos",
+          style: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 20),
+        Expanded(
+          child: ListView.builder(
+            itemCount: pedidos.length,
+            itemBuilder: (context, index) {
+              final pedido = pedidos[index];
+
+              return Card(
+                margin: const EdgeInsets.only(bottom: 20),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Pedido ${pedido['id']} - ${pedido['mesa']}",
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: pedido['colorEstado'],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              pedido['estado'],
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Divider(height: 25),
+                      ...List.generate(
+                        pedido['items'].length,
+                        (i) => Padding(
+                          padding: const EdgeInsets.only(bottom: 5),
+                          child: Text(
+                            "• ${pedido['items'][i]}",
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                        ),
+                      ),
+                      const Divider(height: 25),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Total a cobrar: ${pedido['total']}",
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orange,
+                            ),
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.black,
+                            ),
+                            onPressed: () {
+                              // Acción para cambiar estado o finalizar
+                            },
+                            child: const Text(
+                              "Completar",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget contenidoPrincipal() {
     switch (paginaActual) {
       case 0:
@@ -319,12 +444,7 @@ class _AdminScreenState extends State<AdminScreen> {
         return pantallaPlatillos();
 
       case 2:
-        return const Center(
-          child: Text(
-            "Pedidos",
-            style: TextStyle(fontSize: 30),
-          ),
-        );
+        return pantallaPedidos();
 
       case 3:
         return const Center(

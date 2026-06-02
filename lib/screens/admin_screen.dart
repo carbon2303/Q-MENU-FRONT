@@ -435,6 +435,113 @@ class _AdminScreenState extends State<AdminScreen> {
     );
   }
 
+  // Nueva vista para los clientes
+  Widget pantallaClientes() {
+    final List<Map<String, dynamic>> clientes = [
+      {
+        "nombre": "Carlos Mendoza",
+        "telefono": "555-0192",
+        "mesa": "Mesa 4",
+        "visitas": "12 visitas",
+      },
+      {
+        "nombre": "Ana Sofía Ruiz",
+        "telefono": "555-0483",
+        "mesa": "Mesa 8",
+        "visitas": "5 visitas",
+      },
+      {
+        "nombre": "Juan Pedro Gómez",
+        "telefono": "555-0711",
+        "mesa": "Para llevar",
+        "visitas": "22 visitas",
+      },
+    ];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "Control de Clientes",
+          style: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 20),
+        Expanded(
+          child: ListView.builder(
+            itemCount: clientes.length,
+            itemBuilder: (context, index) {
+              final cliente = clientes[index];
+
+              return Card(
+                margin: const EdgeInsets.only(bottom: 15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: ListTile(
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 10,
+                  ),
+                  leading: const CircleAvatar(
+                    backgroundColor: Colors.orange,
+                    radius: 25,
+                    child: Icon(
+                      Icons.person,
+                      color: Colors.white,
+                      size: 30,
+                    ),
+                  ),
+                  title: Text(
+                    cliente["nombre"],
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  subtitle: Text("Tel: ${cliente['telefono']}"),
+                  trailing: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.orange.shade100,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          cliente["mesa"],
+                          style: const TextStyle(
+                            color: Colors.orange,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        cliente["visitas"],
+                        style: TextStyle(
+                          color: Colors.grey.shade600,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget contenidoPrincipal() {
     switch (paginaActual) {
       case 0:
@@ -447,11 +554,40 @@ class _AdminScreenState extends State<AdminScreen> {
         return pantallaPedidos();
 
       case 3:
-        return const Center(
-          child: Text(
-            "Clientes",
-            style: TextStyle(fontSize: 30),
-          ),
+        // Solución integrada directamente en el case para evitar errores de funciones faltantes
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Control de Clientes",
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
+            Expanded(
+              child: ListView(
+                children: [
+                  Card(
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                    child: const ListTile(
+                      leading: CircleAvatar(backgroundColor: Colors.orange, child: Icon(Icons.person, color: Colors.white)),
+                      title: Text("Carlos Mendoza", style: TextStyle(fontWeight: FontWeight.bold)),
+                      subtitle: Text("Tel: 555-0192"),
+                      trailing: Text("Mesa 4", style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                  Card(
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                    child: const ListTile(
+                      leading: CircleAvatar(backgroundColor: Colors.orange, child: Icon(Icons.person, color: Colors.white)),
+                      title: Text("Ana Sofía Ruiz", style: TextStyle(fontWeight: FontWeight.bold)),
+                      subtitle: Text("Tel: 555-0483"),
+                      trailing: Text("Mesa 8", style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         );
 
       case 4:

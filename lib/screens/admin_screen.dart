@@ -22,6 +22,46 @@ class _AdminScreenState extends State<AdminScreen> {
       "precio": "\$120",
       "imagen": "https://images.unsplash.com/photo-1513104890138-7c749659a591",
     },
+    {
+      "nombre": "Hamburguesa Clásica",
+      "precio": "\$110",
+      "imagen": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd",
+    },
+    {
+      "nombre": "Sushi Roll",
+      "precio": "\$150",
+      "imagen": "https://images.unsplash.com/photo-1579871494447-9811cf80d66c",
+    },
+    {
+      "nombre": "Alitas BBQ",
+      "precio": "\$130",
+      "imagen": "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d",
+    },
+    {
+      "nombre": "Pasta Alfredo",
+      "precio": "\$140",
+      "imagen": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1",
+    },
+    {
+      "nombre": "Ensalada César",
+      "precio": "\$85",
+      "imagen": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd",
+    },
+    {
+      "nombre": "Tacos al Pastor",
+      "precio": "\$95",
+      "imagen": "https://images.unsplash.com/photo-1551504734-5ee1c4a1479b",
+    },
+    {
+      "nombre": "Hot Dog Especial",
+      "precio": "\$70",
+      "imagen": "https://images.unsplash.com/photo-1550547660-d9450f859349",
+    },
+    {
+      "nombre": "Papas a la Francesa",
+      "precio": "\$50",
+      "imagen": "https://images.unsplash.com/photo-1576107232684-1279f390859f",
+    },
   ];
 
   void agregarPlatillo() {
@@ -542,6 +582,175 @@ class _AdminScreenState extends State<AdminScreen> {
     );
   }
 
+  Widget pantallaVentas() {
+    // Datos simulados para historial de ventas
+    final List<Map<String, dynamic>> historialVentas = [
+      {
+        "fecha": "05 Jun 2026, 14:30",
+        "orden": "#1023",
+        "total": "\$350",
+        "metodo": "Efectivo"
+      },
+      {
+        "fecha": "05 Jun 2026, 15:15",
+        "orden": "#1024",
+        "total": "\$120",
+        "metodo": "Tarjeta"
+      },
+      {
+        "fecha": "05 Jun 2026, 16:00",
+        "orden": "#1025",
+        "total": "\$480",
+        "metodo": "Transferencia"
+      },
+      {
+        "fecha": "05 Jun 2026, 16:45",
+        "orden": "#1026",
+        "total": "\$890",
+        "metodo": "Tarjeta"
+      },
+    ];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "Reporte de Ventas",
+          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 20),
+        Row(
+          children: [
+            // Reutilizamos tu widget tarjetaInfo
+            tarjetaInfo("Ventas Hoy", "\$1,840", Icons.attach_money),
+            const SizedBox(width: 20),
+            tarjetaInfo("Órdenes Hoy", "15", Icons.receipt_long),
+          ],
+        ),
+        const SizedBox(height: 30),
+        const Text(
+          "Historial Reciente",
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 15),
+        Expanded(
+          child: ListView.builder(
+            itemCount: historialVentas.length,
+            itemBuilder: (context, index) {
+              final venta = historialVentas[index];
+              return Card(
+                margin: const EdgeInsets.only(bottom: 15),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15)),
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.green.shade100,
+                    child: const Icon(Icons.attach_money, color: Colors.green),
+                  ),
+                  title: Text("Orden ${venta['orden']} - ${venta['metodo']}",
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                  subtitle: Text(venta['fecha']),
+                  trailing: Text(
+                    venta['total'],
+                    style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget pantallaConfiguracion() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "Configuración",
+          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 20),
+        Expanded(
+          child: ListView(
+            children: [
+              Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15)),
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text("Datos del Restaurante",
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold)),
+                      const Divider(height: 30),
+                      const ListTile(
+                        leading: Icon(Icons.store, color: Colors.orange),
+                        title: Text("Nombre del Local"),
+                        subtitle: Text("Q-Menu Restaurante"),
+                        trailing: Icon(Icons.edit, color: Colors.grey),
+                      ),
+                      const ListTile(
+                        leading: Icon(Icons.location_on, color: Colors.orange),
+                        title: Text("Dirección"),
+                        subtitle: Text("Av. Principal 123, Centro"),
+                        trailing: Icon(Icons.edit, color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15)),
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text("Preferencias de la App",
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold)),
+                      const Divider(height: 30),
+                      SwitchListTile(
+                        title: const Text("Notificaciones de nuevos pedidos"),
+                        value: true,
+                        activeColor: Colors.orange,
+                        onChanged: (val) {},
+                        secondary: const Icon(Icons.notifications_active),
+                      ),
+                      SwitchListTile(
+                        title: const Text("Tema Oscuro"),
+                        value: false,
+                        activeColor: Colors.orange,
+                        onChanged: (val) {},
+                        secondary: const Icon(Icons.dark_mode),
+                      ),
+                      SwitchListTile(
+                        title: const Text("Sonido de alerta de pedidos"),
+                        value: true,
+                        activeColor: Colors.orange,
+                        onChanged: (val) {},
+                        secondary: const Icon(Icons.volume_up),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget contenidoPrincipal() {
     switch (paginaActual) {
       case 0:
@@ -554,57 +763,13 @@ class _AdminScreenState extends State<AdminScreen> {
         return pantallaPedidos();
 
       case 3:
-        // Solución integrada directamente en el case para evitar errores de funciones faltantes
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "Control de Clientes",
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: ListView(
-                children: [
-                  Card(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                    child: const ListTile(
-                      leading: CircleAvatar(backgroundColor: Colors.orange, child: Icon(Icons.person, color: Colors.white)),
-                      title: Text("Carlos Mendoza", style: TextStyle(fontWeight: FontWeight.bold)),
-                      subtitle: Text("Tel: 555-0192"),
-                      trailing: Text("Mesa 4", style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold)),
-                    ),
-                  ),
-                  Card(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                    child: const ListTile(
-                      leading: CircleAvatar(backgroundColor: Colors.orange, child: Icon(Icons.person, color: Colors.white)),
-                      title: Text("Ana Sofía Ruiz", style: TextStyle(fontWeight: FontWeight.bold)),
-                      subtitle: Text("Tel: 555-0483"),
-                      trailing: Text("Mesa 8", style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold)),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        );
+        return pantallaClientes();
 
       case 4:
-        return const Center(
-          child: Text(
-            "Ventas",
-            style: TextStyle(fontSize: 30),
-          ),
-        );
+        return pantallaVentas();
 
       case 5:
-        return const Center(
-          child: Text(
-            "Configuración",
-            style: TextStyle(fontSize: 30),
-          ),
-        );
+        return pantallaConfiguracion();
 
       default:
         return dashboard();
